@@ -1,10 +1,23 @@
-const API_URL = "http://127.0.0.1:8000";
+// ============================================================
+// MASTITIS AI — PREDICTION ENGINE
+// ============================================================
 
+// Production API
+const API_URL = "https://mastitis-ai-api.onrender.com";
+
+
+// ============================================================
+// RUN AI PREDICTION
+// ============================================================
 
 async function runPrediction() {
 
     const button = document.getElementById("runPrediction");
     const errorBox = document.getElementById("predictionError");
+
+    // --------------------------------------------------------
+    // READ INPUTS
+    // --------------------------------------------------------
 
     const temperature = parseFloat(
         document.getElementById("milkTemperature").value
@@ -33,12 +46,18 @@ async function runPrediction() {
     );
 
 
-    // Clear previous error
+    // --------------------------------------------------------
+    // CLEAR PREVIOUS ERROR
+    // --------------------------------------------------------
+
     errorBox.classList.add("hidden");
     errorBox.textContent = "";
 
 
-    // Validate all six inputs
+    // --------------------------------------------------------
+    // VALIDATE INPUTS
+    // --------------------------------------------------------
+
     if (
         Number.isNaN(temperature) ||
         Number.isNaN(ph) ||
@@ -57,7 +76,10 @@ async function runPrediction() {
     }
 
 
-    // Clotting must be 0 or 1
+    // --------------------------------------------------------
+    // VALIDATE CLOTTING
+    // --------------------------------------------------------
+
     if (clotting !== 0 && clotting !== 1) {
 
         errorBox.textContent =
@@ -69,6 +91,10 @@ async function runPrediction() {
     }
 
 
+    // --------------------------------------------------------
+    // DISABLE BUTTON
+    // --------------------------------------------------------
+
     button.disabled = true;
 
     button.innerHTML = `
@@ -78,7 +104,15 @@ async function runPrediction() {
 
     try {
 
-        console.log("Sending prediction request...");
+        console.log("====================================");
+        console.log("Mastitis AI Prediction Request");
+        console.log("API:", API_URL);
+        console.log("====================================");
+
+
+        // ----------------------------------------------------
+        // REQUEST DATA
+        // ----------------------------------------------------
 
         const requestBody = {
 
@@ -103,13 +137,18 @@ async function runPrediction() {
         );
 
 
+        // ----------------------------------------------------
+        // SEND REQUEST TO LIVE FASTAPI SERVER
+        // ----------------------------------------------------
+
         const response = await fetch(
             `${API_URL}/predict`,
             {
                 method: "POST",
 
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
 
                 body: JSON.stringify(requestBody)
@@ -117,7 +156,23 @@ async function runPrediction() {
         );
 
 
-        const data = await response.json();
+        // ----------------------------------------------------
+        // READ RESPONSE SAFELY
+        // ----------------------------------------------------
+
+        let data;
+
+        try {
+
+            data = await response.json();
+
+        } catch (jsonError) {
+
+            throw new Error(
+                `Server returned an invalid response (${response.status}).`
+            );
+
+        }
 
 
         console.log(
@@ -126,14 +181,25 @@ async function runPrediction() {
         );
 
 
+        // ----------------------------------------------------
+        // API ERROR
+        // ----------------------------------------------------
+
         if (!response.ok) {
 
-            throw new Error(
-                `API returned ${response.status}`
-            );
+            const apiMessage =
+                data?.detail ||
+                data?.message ||
+                `API returned ${response.status}`;
+
+            throw new Error(apiMessage);
 
         }
 
+
+        // ----------------------------------------------------
+        // DISPLAY RESULT
+        // ----------------------------------------------------
 
         showPredictionResult(data);
 
@@ -147,12 +213,16 @@ async function runPrediction() {
 
 
         errorBox.textContent =
-            "Unable to get prediction from the AI engine.";
+            `Unable to get prediction from the AI engine. ${error.message || ""}`;
 
         errorBox.classList.remove("hidden");
 
     }
 
+
+    // --------------------------------------------------------
+    // RESTORE BUTTON
+    // --------------------------------------------------------
 
     button.disabled = false;
 
@@ -164,7 +234,7 @@ async function runPrediction() {
 
 
 // ============================================================
-// SHOW RESULT
+// SHOW PREDICTION RESULT
 // ============================================================
 
 function showPredictionResult(data) {
@@ -194,10 +264,18 @@ function showPredictionResult(data) {
         document.getElementById("resultDescription");
 
 
+    // --------------------------------------------------------
+    // SHOW RESULT PANEL
+    // --------------------------------------------------------
+
     emptyState.classList.add("hidden");
 
     resultPanel.classList.remove("hidden");
 
+
+    // --------------------------------------------------------
+    // PROBABILITY
+    // --------------------------------------------------------
 
     const percent =
         Number(data.probability_percent || 0);
@@ -209,8 +287,23 @@ function showPredictionResult(data) {
     probabilityText.textContent =
         `${percent.toFixed(1)}%`;
 
+
+    // --------------------------------------------------------
+    // PREDICTION TEXT
+    // --------------------------------------------------------
+
+    const prediction =
+        String(
+            data.prediction || "UNKNOWN"
+        );
+
+
     predictionText.textContent =
-        data.prediction || "UNKNOWN";
+        prediction;
+
+
+    const predictionUpper =
+        prediction.toUpperCase();
 
 
     // ========================================================
@@ -218,10 +311,8 @@ function showPredictionResult(data) {
     // ========================================================
 
     if (
-        data.prediction &&
-        data.prediction
-            .toUpperCase()
-            .includes("MASTITIS")
+        predictionUpper.includes("MASTITIS") ||
+        predictionUpper.includes("RISK")
     ) {
 
         badge.textContent =
@@ -244,10 +335,7 @@ function showPredictionResult(data) {
     // ========================================================
 
     else if (
-        data.prediction &&
-        data.prediction
-            .toUpperCase()
-            .includes("MONITOR")
+        predictionUpper.includes("MONITOR")
     ) {
 
         badge.textContent =
@@ -266,7 +354,7 @@ function showPredictionResult(data) {
 
 
     // ========================================================
-    // LOW RISK
+    // LOW RISK / HEALTHY
     // ========================================================
 
     else {
