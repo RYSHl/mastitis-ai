@@ -264,7 +264,7 @@ async function loadCows() {
                         <br>
 
                         <strong>
-                            http://127.0.0.1:8000
+                           https://mastitis-ai-api.onrender.com
                         </strong>
 
                     </td>
