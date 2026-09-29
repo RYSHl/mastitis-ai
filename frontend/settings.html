@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mastitis AI — Settings</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .settings-page {
+            padding: 32px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .settings-header {
+            margin-bottom: 28px;
+        }
+
+        .settings-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .settings-header p {
+            margin-top: 8px;
+            color: #7b8190;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .settings-card {
+            background: #ffffff;
+            border: 1px solid #e7eaf0;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+        }
+
+        .settings-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .settings-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+
+        .settings-card-header h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .settings-card-header p {
+            margin: 6px 0 0;
+            color: #7b8190;
+            font-size: 13px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #edf0f4;
+            gap: 20px;
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-info strong {
+            display: block;
+            font-size: 14px;
+            color: #191d28;
+        }
+
+        .setting-info span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #858b99;
+        }
+
+        .setting-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #565bd8;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-badge.online {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        .field-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #5f6574;
+        }
+
+        .field-group input,
+        .field-group select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border: 1px solid #e1e5eb;
+            border-radius: 10px;
+            background: #f8f9fb;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .field-group input:focus,
+        .field-group select:focus {
+            border-color: #5755d9;
+            background: #ffffff;
+        }
+
+        .threshold-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .threshold-box {
+            padding: 18px;
+            border-radius: 14px;
+            background: #f8f9fc;
+            border: 1px solid #edf0f4;
+        }
+
+        .threshold-box span {
+            display: block;
+            font-size: 11px;
+            color: #858b99;
+            margin-bottom: 8px;
+        }
+
+        .threshold-box strong {
+            font-size: 20px;
+            color: #191d28;
+        }
+
+        .save-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .save-button {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            background: #5755d9;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            opacity: 0.9;
+        }
+
+        .save-message {
+            margin-right: 14px;
+            align-self: center;
+            font-size: 13px;
+            color: #047857;
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-card.full {
+                grid-column: auto;
+            }
+
+            .threshold-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="settings-page">
+
+    <div class="settings-header">
+        <h1>System Settings</h1>
+        <p>Configure the Mastitis AI monitoring and prediction system.</p>
+    </div>
+
+
+    <div class="settings-grid">
+
+
+        <!-- SYSTEM STATUS -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                <div>
+                    <h2>System Status</h2>
+                    <p>Current platform connectivity.</p>
+                </div>
+
+                <span class="status-badge online">
+                    <span class="status-dot"></span>
+                    Online
+                </span>
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>Frontend</strong>
+                    <span>Web monitoring interface</span>
+                </div>
+
+                <div class="setting-value">
+                    Connected
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>AI Backend</strong>
+                    <span>FastAPI prediction service</span>
+                </div>
+
+                <div class="setting-value">
+                    Connected
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>AI Model</strong>
+                    <span>Current prediction engine</span>
+                </div>
+
+                <div class="setting-value">
+                    Random Forest
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- API CONFIGURATION -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                <div>
+                    <h2>Backend Configuration</h2>
+                    <p>Connection used by the dashboard.</p>
+                </div>
+            </div>
+
+            <div class="field-group">
+
+                <label>API Endpoint</label>
+
+                <input
+                    type="text"
+                    id="apiEndpoint"
+                    value="http://127.0.0.1:8000"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Prediction Endpoint</label>
+
+                <input
+                    type="text"
+                    value="/predict"
+                    readonly
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- AI THRESHOLDS -->
+
+        <div class="settings-card full">
+
+            <div class="settings-card-header">
+
+                <div>
+                    <h2>AI Risk Thresholds</h2>
+                    <p>Risk classification used by the monitoring system.</p>
+                </div>
+
+            </div>
+
+            <div class="threshold-grid">
+
+                <div class="threshold-box">
+
+                    <span>LOW RISK</span>
+
+                    <strong>0–30%</strong>
+
+                </div>
+
+                <div class="threshold-box">
+
+                    <span>MONITORING</span>
+
+                    <strong>31–69%</strong>
+
+                </div>
+
+                <div class="threshold-box">
+
+                    <span>HIGH RISK</span>
+
+                    <strong>70–100%</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SENSOR CONFIGURATION -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+                    <h2>Sensor Configuration</h2>
+                    <p>Parameters received from the monitoring hardware.</p>
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>Temperature</strong>
+                    <span>Milk temperature sensor</span>
+                </div>
+
+                <div class="setting-value">
+                    °C
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>Milk pH</strong>
+                    <span>Milk acidity measurement</span>
+                </div>
+
+                <div class="setting-value">
+                    pH
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>Conductivity</strong>
+                    <span>Milk electrical conductivity</span>
+                </div>
+
+                <div class="setting-value">
+                    mS/cm
+                </div>
+
+            </div>
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+                    <strong>Milk Yield</strong>
+                    <span>Daily milk production</span>
+                </div>
+
+                <div class="setting-value">
+                    Litres
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- APPLICATION -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+
+                <div>
+                    <h2>Application</h2>
+                    <p>General system preferences.</p>
+                </div>
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Farm / Facility Name</label>
+
+                <input
+                    type="text"
+                    id="farmName"
+                    placeholder="Enter facility name"
+                >
+
+            </div>
+
+            <div class="field-group">
+
+                <label>Monitoring Mode</label>
+
+                <select id="monitoringMode">
+
+                    <option value="live">
+                        Live Monitoring
+                    </option>
+
+                    <option value="manual">
+                        Manual Assessment
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <div class="settings-card full">
+
+            <div class="save-area">
+
+                <span
+                    id="saveMessage"
+                    class="save-message">
+                    Settings saved
+                </span>
+
+                <button
+                    class="save-button"
+                    onclick="saveSettings()">
+
+                    Save Settings
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+function saveSettings() {
+
+    const farmName =
+        document.getElementById("farmName").value;
+
+    const monitoringMode =
+        document.getElementById("monitoringMode").value;
+
+    const apiEndpoint =
+        document.getElementById("apiEndpoint").value;
+
+
+    localStorage.setItem(
+        "mastitisFarmName",
+        farmName
+    );
+
+    localStorage.setItem(
+        "mastitisMonitoringMode",
+        monitoringMode
+    );
+
+    localStorage.setItem(
+        "mastitisApiEndpoint",
+        apiEndpoint
+    );
+
+
+    const message =
+        document.getElementById("saveMessage");
+
+    message.style.display = "inline";
+
+    setTimeout(() => {
+
+        message.style.display = "none";
+
+    }, 2500);
+
+}
+
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    const farmName =
+        localStorage.getItem("mastitisFarmName");
+
+    const monitoringMode =
+        localStorage.getItem("mastitisMonitoringMode");
+
+    const apiEndpoint =
+        localStorage.getItem("mastitisApiEndpoint");
+
+
+    if (farmName) {
+
+        document.getElementById("farmName").value =
+            farmName;
+
+    }
+
+
+    if (monitoringMode) {
+
+        document.getElementById("monitoringMode").value =
+            monitoringMode;
+
+    }
+
+
+    if (apiEndpoint) {
+
+        document.getElementById("apiEndpoint").value =
+            apiEndpoint;
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

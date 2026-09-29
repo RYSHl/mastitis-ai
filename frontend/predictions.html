@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mastitis AI — Predictions</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="prediction-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="prediction-header">
+
+        <div>
+
+            <div class="eyebrow">
+                AI DIAGNOSTICS
+            </div>
+
+            <h1>
+                Mastitis Prediction
+            </h1>
+
+            <p>
+                Analyze milk parameters using the Mastitis AI
+                Random Forest model.
+            </p>
+
+        </div>
+
+
+        <div class="api-status">
+
+            <span class="status-dot"></span>
+
+            AI Engine Online
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN LAYOUT
+    ====================================================== -->
+
+    <div class="prediction-layout">
+
+
+        <!-- =================================================
+             INPUT PANEL
+        ================================================== -->
+
+        <section class="prediction-card">
+
+
+            <div class="card-heading">
+
+                <div>
+
+                    <h2>
+                        Milk Parameters
+                    </h2>
+
+                    <p>
+                        Enter the latest measurements for the cow.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PREDICTION FORM
+            ================================================== -->
+
+            <div class="prediction-form">
+
+
+                <!-- MILK TEMPERATURE -->
+
+                <div class="prediction-field">
+
+                    <label for="milkTemperature">
+
+                        Milk Temperature
+
+                        <span>
+                            °C
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        id="milkTemperature"
+                        type="number"
+                        step="0.01"
+                        placeholder="e.g. 38.05"
+                        value="38.05"
+                    >
+
+                </div>
+
+
+                <!-- MILK PH -->
+
+                <div class="prediction-field">
+
+                    <label for="milkPH">
+                        Milk pH
+                    </label>
+
+
+                    <input
+                        id="milkPH"
+                        type="number"
+                        step="0.01"
+                        placeholder="e.g. 7.10"
+                        value="7.10"
+                    >
+
+                </div>
+
+
+                <!-- MILK CONDUCTIVITY -->
+
+                <div class="prediction-field">
+
+                    <label for="milkConductivity">
+                        Milk Conductivity
+                    </label>
+
+
+                    <input
+                        id="milkConductivity"
+                        type="number"
+                        step="0.01"
+                        placeholder="e.g. 6.80"
+                        value="6.80"
+                    >
+
+                </div>
+
+
+                <!-- MILK YIELD -->
+
+                <div class="prediction-field">
+
+                    <label for="milkYield">
+
+                        Milk Yield
+
+                        <span>
+                            L
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        id="milkYield"
+                        type="number"
+                        step="0.01"
+                        placeholder="e.g. 9.35"
+                        value="9.35"
+                    >
+
+                </div>
+
+
+                <!-- SOMATIC CELL COUNT -->
+
+                <div class="prediction-field">
+
+                    <label for="somaticCellCount">
+                        Somatic Cell Count
+                    </label>
+
+
+                    <input
+                        id="somaticCellCount"
+                        type="number"
+                        step="1"
+                        min="0"
+                        placeholder="e.g. 500"
+                        value="500"
+                    >
+
+                </div>
+
+
+                <!-- CLOTTING -->
+
+                <div class="prediction-field">
+
+                    <label for="clotting">
+                        Clotting
+                    </label>
+
+
+                    <input
+                        id="clotting"
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="1"
+                        placeholder="0 or 1"
+                        value="0"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 RUN BUTTON
+            ================================================== -->
+
+            <button
+                id="runPrediction"
+                class="prediction-button"
+                onclick="runPrediction()"
+            >
+
+                <span>
+                    Run AI Assessment
+                </span>
+
+            </button>
+
+
+            <!-- ERROR -->
+
+            <div
+                id="predictionError"
+                class="prediction-error hidden"
+            ></div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             RESULT PANEL
+        ================================================== -->
+
+        <section class="prediction-card result-card">
+
+
+            <div class="card-heading">
+
+                <div>
+
+                    <h2>
+                        AI Assessment
+                    </h2>
+
+                    <p>
+                        Current prediction generated by the model.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div
+                id="predictionEmpty"
+                class="prediction-empty"
+            >
+
+                <div class="empty-icon">
+                    ✦
+                </div>
+
+
+                <h3>
+                    Ready for assessment
+                </h3>
+
+
+                <p>
+
+                    Enter the cow's milk parameters and run the AI
+                    assessment to generate a risk prediction.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RESULT
+            ================================================== -->
+
+            <div
+                id="predictionResult"
+                class="prediction-result-panel hidden"
+            >
+
+
+                <!-- RESULT BADGE -->
+
+                <div
+                    id="resultBadge"
+                    class="result-badge"
+                >
+                    MASTITIS RISK
+                </div>
+
+
+
+                <!-- PROBABILITY -->
+
+                <div class="probability-container">
+
+                    <div class="probability-ring">
+
+                        <div>
+
+                            <strong id="probabilityValue">
+                                0%
+                            </strong>
+
+                            <span>
+                                Risk probability
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RESULT MESSAGE -->
+
+                <div class="result-message">
+
+                    <div class="result-label">
+                        AI INTERPRETATION
+                    </div>
+
+
+                    <h3 id="resultTitle">
+                        Mastitis risk detected
+                    </h3>
+
+
+                    <p id="resultDescription">
+
+                        The model has identified a high-risk pattern
+                        in the submitted milk parameters.
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- RESULT METRICS -->
+
+                <div class="result-metrics">
+
+
+                    <div>
+
+                        <span>
+                            Prediction
+                        </span>
+
+                        <strong id="predictionText">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Probability
+                        </span>
+
+                        <strong id="probabilityText">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+<script src="js/predictions.js"></script>
+
+</body>
+</html>

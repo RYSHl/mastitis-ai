@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mastitis AI — Cow Monitoring</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .page {
+            padding: 32px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            margin-top: 8px;
+            color: #777;
+        }
+
+        .monitor-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .search-box,
+        .filter-box {
+            padding: 12px 15px;
+            border: 1px solid #e2e5ea;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .filter-box {
+            min-width: 160px;
+        }
+
+        .cow-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cow-table th {
+            text-align: left;
+            padding: 14px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #8a8f98;
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .cow-table td {
+            padding: 17px 14px;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+        }
+
+        .cow-id {
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status.healthy {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status.risk {
+            background: #fff1f2;
+            color: #be123c;
+        }
+
+        .status.monitoring {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .risk-number {
+            font-weight: 700;
+        }
+
+        .risk-low {
+            color: #047857;
+        }
+
+        .risk-medium {
+            color: #c2410c;
+        }
+
+        .risk-high {
+            color: #be123c;
+        }
+
+        .view-btn {
+            border: 0;
+            background: #f4f6f8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .view-btn:hover {
+            background: #e9edf1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #888;
+        }
+
+        @media (max-width: 900px) {
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .monitor-card {
+                overflow-x: auto;
+            }
+
+            .cow-table {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Cow Monitoring</h1>
+            <p>Monitor individual cow health and AI risk assessments.</p>
+        </div>
+    </div>
+
+    <div class="monitor-card">
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="cowSearch"
+                class="search-box"
+                placeholder="Search by Cow ID..."
+            >
+
+            <select id="statusFilter" class="filter-box">
+                <option value="all">All Status</option>
+                <option value="healthy">Healthy</option>
+                <option value="monitoring">Monitoring</option>
+                <option value="risk">Mastitis Risk</option>
+            </select>
+
+        </div>
+
+        <table class="cow-table">
+
+            <thead>
+                <tr>
+                    <th>Cow ID</th>
+                    <th>Temperature</th>
+                    <th>pH</th>
+                    <th>Conductivity</th>
+                    <th>Milk Yield</th>
+                    <th>Risk</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="cowTableBody">
+
+                <!-- Temporary demonstration data -->
+                <tr data-status="healthy">
+
+                    <td class="cow-id">COW-001</td>
+
+                    <td>35.5 °C</td>
+
+                    <td>6.65</td>
+
+                    <td>4.70</td>
+
+                    <td>20.0 L</td>
+
+                    <td>
+                        <span class="risk-number risk-low">
+                            0%
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="status healthy">
+                            <span class="dot"></span>
+                            Healthy
+                        </span>
+                    </td>
+
+                    <td>
+                        <button
+                            class="view-btn"
+                            onclick="viewCow('COW-001')">
+                            View
+                        </button>
+                    </td>
+
+                </tr>
+
+
+                <tr data-status="risk">
+
+                    <td class="cow-id">COW-002</td>
+
+                    <td>38.2 °C</td>
+
+                    <td>7.10</td>
+
+                    <td>6.80</td>
+
+                    <td>9.5 L</td>
+
+                    <td>
+                        <span class="risk-number risk-high">
+                            100%
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="status risk">
+                            <span class="dot"></span>
+                            Mastitis Risk
+                        </span>
+                    </td>
+
+                    <td>
+                        <button
+                            class="view-btn"
+                            onclick="viewCow('COW-002')">
+                            View
+                        </button>
+                    </td>
+
+                </tr>
+
+
+                <tr data-status="monitoring">
+
+                    <td class="cow-id">COW-003</td>
+
+                    <td>37.2 °C</td>
+
+                    <td>6.95</td>
+
+                    <td>5.90</td>
+
+                    <td>14.2 L</td>
+
+                    <td>
+                        <span class="risk-number risk-medium">
+                            30%
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="status monitoring">
+                            <span class="dot"></span>
+                            Monitoring
+                        </span>
+                    </td>
+
+                    <td>
+                        <button
+                            class="view-btn"
+                            onclick="viewCow('COW-003')">
+                            View
+                        </button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="js/cows.js"></script>
+
+<!-- =========================================================
+     COW DETAILS MODAL
+========================================================= -->
+
+<div id="cowModal" class="cow-modal">
+
+    <div class="cow-modal-overlay" onclick="closeCowModal()"></div>
+
+    <div class="cow-modal-card">
+
+        <!-- HEADER -->
+
+        <div class="cow-modal-header">
+
+            <div>
+                <div class="cow-modal-label">
+                    COW PROFILE
+                </div>
+
+                <h2 id="modalCowId">
+                    C0001
+                </h2>
+            </div>
+
+            <button
+                class="cow-modal-close"
+                onclick="closeCowModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <!-- AI RESULT -->
+
+        <div id="modalRiskBox" class="modal-risk-box">
+
+            <div>
+
+                <div class="modal-risk-label">
+                    AI RISK ASSESSMENT
+                </div>
+
+                <div
+                    id="modalStatus"
+                    class="modal-status">
+
+                    Healthy
+
+                </div>
+
+            </div>
+
+            <div
+                id="modalRisk"
+                class="modal-risk">
+
+                1.0%
+
+            </div>
+
+        </div>
+
+
+        <!-- MILK PARAMETERS -->
+
+        <div class="modal-section">
+
+            <div class="modal-section-title">
+                Milk Parameters
+            </div>
+
+            <div class="modal-grid">
+
+                <div class="modal-data">
+
+                    <span>
+                        Temperature
+                    </span>
+
+                    <strong id="modalTemperature">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-data">
+
+                    <span>
+                        Milk pH
+                    </span>
+
+                    <strong id="modalPH">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-data">
+
+                    <span>
+                        Conductivity
+                    </span>
+
+                    <strong id="modalConductivity">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-data">
+
+                    <span>
+                        Milk Yield
+                    </span>
+
+                    <strong id="modalYield">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HEALTH INDICATORS -->
+
+        <div class="modal-section">
+
+            <div class="modal-section-title">
+                Health Indicators
+            </div>
+
+            <div class="modal-grid">
+
+                <div class="modal-data">
+
+                    <span>
+                        Somatic Cell Count
+                    </span>
+
+                    <strong id="modalSCC">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-data">
+
+                    <span>
+                        Clotting
+                    </span>
+
+                    <strong id="modalClotting">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="modal-data">
+
+                    <span>
+                        Day
+                    </span>
+
+                    <strong id="modalDay">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI INFORMATION -->
+
+        <div class="modal-section">
+
+            <div class="modal-section-title">
+                AI Assessment
+            </div>
+
+            <div class="modal-ai-info">
+
+                <div>
+
+                    <span>
+                        Prediction
+                    </span>
+
+                    <strong id="modalPrediction">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Risk Probability
+                    </span>
+
+                    <strong id="modalProbability">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     COW PROFILE MODAL
+========================================================= -->
+
+<div id="cowModal" class="cow-modal">
+
+    <div class="cow-modal-overlay" onclick="closeCowModal()"></div>
+
+    <div class="cow-modal-card">
+
+        <!-- HEADER -->
+        <div class="cow-modal-header">
+
+            <div>
+                <div class="cow-modal-label">
+                    COW PROFILE
+                </div>
+
+                <h2 id="modalCowId">
+                    C0001
+                </h2>
+            </div>
+
+            <button
+                class="cow-modal-close"
+                onclick="closeCowModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- AI RISK -->
+        <div class="cow-risk-section">
+
+            <div class="section-title">
+                AI RISK ASSESSMENT
+            </div>
+
+            <div class="cow-risk-content">
+
+                <div>
+                    <span class="cow-risk-label">
+                        Status
+                    </span>
+
+                    <span
+                        id="modalStatus"
+                        class="cow-modal-status">
+                        Healthy
+                    </span>
+                </div>
+
+                <div class="cow-risk-value">
+                    <span id="modalRisk">
+                        1.0
+                    </span>%
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MILK PARAMETERS -->
+        <div class="cow-modal-section">
+
+            <div class="section-title">
+                MILK PARAMETERS
+            </div>
+
+            <div class="cow-data-grid">
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Milk Temperature
+                    </span>
+
+                    <span
+                        id="modalTemperature"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Milk pH
+                    </span>
+
+                    <span
+                        id="modalPh"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Conductivity
+                    </span>
+
+                    <span
+                        id="modalConductivity"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Milk Yield
+                    </span>
+
+                    <span
+                        id="modalYield"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HEALTH INDICATORS -->
+        <div class="cow-modal-section">
+
+            <div class="section-title">
+                HEALTH INDICATORS
+            </div>
+
+            <div class="cow-data-grid">
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Somatic Cell Count
+                    </span>
+
+                    <span
+                        id="modalSCC"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Clotting
+                    </span>
+
+                    <span
+                        id="modalClotting"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="cow-data-item">
+
+                    <span class="data-label">
+                        Day
+                    </span>
+
+                    <span
+                        id="modalDay"
+                        class="data-value">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI ASSESSMENT -->
+        <div class="cow-modal-section">
+
+            <div class="section-title">
+                AI ASSESSMENT
+            </div>
+
+            <div class="ai-assessment-box">
+
+                <div class="assessment-row">
+
+                    <span>
+                        Prediction
+                    </span>
+
+                    <strong id="modalPrediction">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="assessment-row">
+
+                    <span>
+                        Risk Probability
+                    </span>
+
+                    <strong id="modalProbability">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <div class="cow-modal-footer">
+
+            <button
+                class="cow-modal-close-btn"
+                onclick="closeCowModal()">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
