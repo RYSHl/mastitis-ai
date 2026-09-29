@@ -334,20 +334,16 @@ async function runAssessment() {
     }
 
 
-    catch (error) {
+   catch (error) {
 
-        console.error(
-            "Prediction error:",
-            error
-        );
+    console.error("Prediction error:", error);
 
-
-        alert(
-            "Unable to get prediction from Mastitis AI API.\n\n" +
-            "Check that FastAPI is running on port 8000."
-        );
-
-    }
+    alert(
+        "Unable to get prediction from Mastitis AI API.\n\n" +
+        "API: " + API_URL + "\n\n" +
+        "Error: " + (error.message || "Unknown error")
+    );
+}
 
 
     finally {
