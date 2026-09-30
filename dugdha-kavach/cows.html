@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cow Monitoring — Dugdha Kavach</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <div class="dashboard-shell">
+
+        <header class="topbar">
+
+            <div>
+                <div class="brand">🐄 Dugdha Kavach</div>
+                <div class="brand-subtitle">
+                    Intelligent Dairy Health Protection
+                </div>
+            </div>
+
+            <div class="connection">
+                <span class="status-dot online"></span>
+                AI Engine Online
+            </div>
+
+        </header>
+
+
+        <main class="dashboard">
+
+            <section class="hero">
+
+                <div>
+
+                    <div class="eyebrow">
+                        COW MONITORING
+                    </div>
+
+                    <h1>Herd Monitoring</h1>
+
+                    <p>
+                        Monitor individual cows and identify
+                        animals requiring attention.
+                    </p>
+
+                </div>
+
+                <a href="dashboard.html"
+                   class="secondary-button">
+                    ← Dashboard
+                </a>
+
+            </section>
+
+
+            <!-- SEARCH + FILTER -->
+
+            <section class="panel">
+
+                <div class="panel-heading">
+
+                    <div>
+                        <h2>All Cow Records</h2>
+
+                        <p class="panel-description">
+                            Live records from the Mastitis AI API.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="cow-controls">
+
+                    <input
+                        type="text"
+                        id="searchCow"
+                        placeholder="Search Cow ID..."
+                    >
+
+                    <select id="statusFilter">
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="Healthy">
+                            Healthy
+                        </option>
+
+                        <option value="Monitoring">
+                            Monitoring
+                        </option>
+
+                        <option value="Mastitis Risk">
+                            Mastitis Risk
+                        </option>
+
+                    </select>
+
+                    <select id="sortRisk">
+
+                        <option value="default">
+                            Default Order
+                        </option>
+
+                        <option value="high">
+                            Highest Risk
+                        </option>
+
+                        <option value="low">
+                            Lowest Risk
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="cowTableContainer"
+                    class="table-container"
+                >
+
+                    <div class="loading-state">
+
+                        <div class="spinner"></div>
+
+                        <p>
+                            Loading cow records...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="./js/cows.js"></script>
+
+</body>
+</html>

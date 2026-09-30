@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dugdha Kavach — Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="dashboard-shell">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <div>
+            <div class="brand">
+                🐄 Dugdha Kavach
+            </div>
+
+            <div class="brand-subtitle">
+                Intelligent Dairy Health Protection
+            </div>
+        </div>
+
+        <div class="connection">
+
+            <span
+                id="statusDot"
+                class="status-dot">
+            </span>
+
+            <span id="systemStatus">
+                Connecting to AI...
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN DASHBOARD -->
+
+    <main class="dashboard">
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div>
+
+                <p class="eyebrow">
+                    HERD INTELLIGENCE
+                </p>
+
+                <h1>
+                    Good morning. Here's your herd.
+                </h1>
+
+                <p>
+                    AI-powered screening using your existing
+                    800-cow dataset.
+                </p>
+
+            </div>
+
+
+            <button
+                id="refreshBtn"
+                class="secondary-button"
+                type="button">
+
+                ↻ Refresh
+
+            </button>
+
+        </section>
+
+
+
+        <!-- STAT CARDS -->
+
+        <section class="stats-grid">
+
+
+            <article class="stat-card">
+
+                <div class="stat-label">
+                    TOTAL COWS
+                </div>
+
+                <div
+                    id="totalCows"
+                    class="stat-value">
+
+                    —
+
+                </div>
+
+                <div class="stat-note">
+                    Records available
+                </div>
+
+            </article>
+
+
+
+            <article class="stat-card healthy-card">
+
+                <div class="stat-label">
+                    HEALTHY
+                </div>
+
+                <div
+                    id="healthyCows"
+                    class="stat-value">
+
+                    —
+
+                </div>
+
+                <div class="stat-note">
+                    Low AI risk
+                </div>
+
+            </article>
+
+
+
+            <article class="stat-card monitoring-card">
+
+                <div class="stat-label">
+                    MONITORING
+                </div>
+
+                <div
+                    id="monitoringCows"
+                    class="stat-value">
+
+                    —
+
+                </div>
+
+                <div class="stat-note">
+                    Needs observation
+                </div>
+
+            </article>
+
+
+
+            <article class="stat-card risk-card">
+
+                <div class="stat-label">
+                    MASTITIS RISK
+                </div>
+
+                <div
+                    id="riskCows"
+                    class="stat-value">
+
+                    —
+
+                </div>
+
+                <div class="stat-note">
+                    High AI risk
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- OVERVIEW -->
+
+        <section class="overview-grid">
+
+
+            <!-- RISK PANEL -->
+
+            <article class="panel risk-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            HERD RISK
+                        </p>
+
+                        <h2>
+                            Current health picture
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="risk-content">
+
+
+                    <div
+                        id="riskCircle"
+                        class="risk-circle"
+                        style="--risk:0%">
+
+                        <div>
+
+                            <strong
+                                id="riskPercent">
+
+                                0%
+
+                            </strong>
+
+                            <span>
+                                high risk
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="risk-breakdown">
+
+
+                        <div class="breakdown-row">
+
+                            <span>
+
+                                <i
+                                    class="legend-dot healthy-dot">
+                                </i>
+
+                                Healthy
+
+                            </span>
+
+                            <strong
+                                id="healthyCount">
+
+                                0
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="breakdown-row">
+
+                            <span>
+
+                                <i
+                                    class="legend-dot monitoring-dot">
+                                </i>
+
+                                Monitoring
+
+                            </span>
+
+                            <strong
+                                id="monitoringCount">
+
+                                0
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="breakdown-row">
+
+                            <span>
+
+                                <i
+                                    class="legend-dot risk-dot">
+                                </i>
+
+                                Mastitis Risk
+
+                            </span>
+
+                            <strong
+                                id="highRiskCount">
+
+                                0
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- AI ENGINE -->
+
+            <article class="panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            AI ENGINE
+                        </p>
+
+                        <h2>
+                            System status
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="system-card">
+
+                    <div class="system-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <strong
+                            id="systemStatusLarge">
+
+                            Connecting...
+
+                        </strong>
+
+                        <p>
+                            FastAPI + Random Forest
+                            screening engine
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="api-url">
+
+                    <span>
+                        API
+                    </span>
+
+                    <code>
+                        mastitis-ai-api.onrender.com
+                    </code>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- COW TABLE -->
+
+        <section class="panel herd-panel">
+
+
+            <div class="panel-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        HERD MONITORING
+                    </p>
+
+                    <h2>
+                        Recent cow records
+                    </h2>
+
+                    <p class="panel-description">
+
+                        Showing the first 10 records
+                        from the live API response.
+
+                    </p>
+
+                </div>
+
+
+                <a
+                    class="secondary-button link-button"
+                    href="index.html">
+
+                    Home
+
+                </a>
+
+            </div>
+
+
+
+            <div
+                id="tableContainer"
+                class="table-container">
+
+                <div class="loading-state">
+
+                    <div class="spinner"></div>
+
+                    <span>
+                        Loading herd records...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
