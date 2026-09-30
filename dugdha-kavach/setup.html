@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="theme-color" content="#F3F7F5">
+
+    <title>Dugdha Kavach — Setup</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-shell">
+
+        <section class="auth-brand">
+            <div class="auth-logo">🐄</div>
+
+            <div>
+                <div class="auth-brand-name">DUGDHA</div>
+                <div class="auth-brand-sub">KAVACH</div>
+            </div>
+        </section>
+
+        <section class="auth-card">
+
+            <div class="auth-eyebrow">
+                <span></span>
+                FARM PROFILE
+            </div>
+
+            <h1>Let's set up your farm.</h1>
+
+            <p class="auth-description">
+                Just a few details before we take you to
+                your herd health dashboard.
+            </p>
+
+            <form id="setupForm">
+
+                <label for="farmerName">Your name</label>
+
+                <input
+                    id="farmerName"
+                    class="auth-field"
+                    type="text"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <label for="farmName">Farm name</label>
+
+                <input
+                    id="farmName"
+                    class="auth-field"
+                    type="text"
+                    placeholder="e.g. My Dairy Farm"
+                    required
+                >
+
+                <label for="language">Preferred language</label>
+
+                <select id="language" class="auth-field">
+                    <option>English</option>
+                    <option>हिन्दी</option>
+                    <option>অসমীয়া</option>
+                </select>
+
+                <button type="submit" class="auth-button">
+                    Enter Dugdha Kavach
+                    <span>→</span>
+                </button>
+
+            </form>
+
+        </section>
+
+        <footer class="auth-footer">
+            <span>●</span> Your herd. Your health. Your intelligence.
+        </footer>
+
+    </main>
+
+    <script>
+        document
+            .getElementById("setupForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                sessionStorage.setItem(
+                    "farmerName",
+                    document.getElementById("farmerName").value
+                );
+
+                sessionStorage.setItem(
+                    "farmName",
+                    document.getElementById("farmName").value
+                );
+
+                sessionStorage.setItem(
+                    "language",
+                    document.getElementById("language").value
+                );
+
+                window.location.href = "./dashboard.html";
+            });
+    </script>
+
+</body>
+</html>

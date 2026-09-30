@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="theme-color" content="#F3F7F5">
+
+    <title>Dugdha Kavach — Verify</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-shell">
+
+        <section class="auth-brand">
+            <div class="auth-logo">🐄</div>
+
+            <div>
+                <div class="auth-brand-name">DUGDHA</div>
+                <div class="auth-brand-sub">KAVACH</div>
+            </div>
+        </section>
+
+        <section class="auth-card">
+
+            <div class="auth-eyebrow">
+                <span></span>
+                SECURE ACCESS
+            </div>
+
+            <h1>Verify your number.</h1>
+
+            <p class="auth-description">
+                Enter the 6-digit verification code sent to
+                your mobile number.
+            </p>
+
+            <form id="otpForm">
+
+                <label for="otp">Verification code</label>
+
+                <input
+                    id="otp"
+                    class="otp-input"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="••••••"
+                    required
+                >
+
+                <div class="demo-code">
+                    Demo OTP: <strong>123456</strong>
+                </div>
+
+                <button type="submit" class="auth-button">
+                    Verify & Continue
+                    <span>→</span>
+                </button>
+
+            </form>
+
+            <button
+                type="button"
+                class="auth-back"
+                onclick="history.back()"
+            >
+                ← Change mobile number
+            </button>
+
+        </section>
+
+        <footer class="auth-footer">
+            <span>●</span> Secure demo authentication
+        </footer>
+
+    </main>
+
+    <script>
+        const form = document.getElementById("otpForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const otp = document.getElementById("otp").value.trim();
+
+            if (otp !== "123456") {
+                alert("Incorrect OTP. Use 123456 for this demo.");
+                return;
+            }
+
+            sessionStorage.setItem("demoAuthenticated", "true");
+
+            window.location.href = "./setup.html";
+        });
+    </script>
+
+</body>
+</html>

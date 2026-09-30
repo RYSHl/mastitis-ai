@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#F3F7F5">
+
+    <title>Dugdha Kavach — Login</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-shell">
+
+        <!-- Brand -->
+        <section class="auth-brand">
+            <div class="auth-logo">🐄</div>
+
+            <div>
+                <div class="auth-brand-name">DUGDHA</div>
+                <div class="auth-brand-sub">KAVACH</div>
+            </div>
+        </section>
+
+        <!-- Login Card -->
+        <section class="auth-card">
+
+            <div class="auth-eyebrow">
+                <span></span>
+                DAIRY HEALTH INTELLIGENCE
+            </div>
+
+            <h1>Welcome back.</h1>
+
+            <p class="auth-description">
+                Sign in to monitor your herd, track animal health
+                and access AI-powered screening.
+            </p>
+
+            <form id="loginForm">
+
+                <label for="phone">Mobile number</label>
+
+                <div class="phone-input">
+                    <span>+91</span>
+
+                    <input
+                        id="phone"
+                        type="tel"
+                        maxlength="10"
+                        placeholder="Enter mobile number"
+                        autocomplete="tel"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="auth-button">
+                    Continue
+                    <span>→</span>
+                </button>
+
+            </form>
+
+            <div class="auth-divider">
+                <span>DEMO MODE</span>
+            </div>
+
+            <p class="auth-note">
+                This is a demonstration prototype.
+                No real SMS or account is required.
+            </p>
+
+        </section>
+
+        <footer class="auth-footer">
+            <span>●</span> AI-powered dairy health
+            <span>•</span>
+            Dugdha Kavach
+        </footer>
+
+    </main>
+
+    <script>
+        const form = document.getElementById("loginForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const phone = document.getElementById("phone").value.trim();
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert("Please enter a valid 10-digit mobile number.");
+                return;
+            }
+
+            sessionStorage.setItem("demoPhone", phone);
+
+            window.location.href = "./otp.html";
+        });
+    </script>
+
+</body>
+</html>
