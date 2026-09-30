@@ -383,12 +383,12 @@ function renderSplash(app) {
                         mastitis screening.
                     </p>
 
-                    <button
-                        class="btn btn-primary"
-                        onclick="go('home')"
-                    >
-                        Get Started →
-                    </button>
+                   <button
+    class="btn btn-primary"
+    onclick="window.location.href='login.html'"
+>
+    Get Started →
+</button>
 
                 </section>
 
